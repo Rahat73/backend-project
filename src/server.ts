@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import express from "express";
-import config from "./app/config";
+import mongoose from 'mongoose';
+import express from 'express';
+import config from './app/config';
 const app = express();
 
 async function main() {
