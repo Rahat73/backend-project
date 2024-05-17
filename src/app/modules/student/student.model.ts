@@ -3,8 +3,6 @@ import {
   Guardian,
   LocalGuardian,
   Student,
-  Student,
-  Student,
   UserName,
 } from './student.interface';
 
@@ -56,4 +54,4 @@ const studentSchema = new Schema<Student>({
   },
 });
 
-const Student = model<Student>('Student', studentSchema);
+export const StudentModel = model<Student>('Student', studentSchema);
