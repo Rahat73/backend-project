@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import express from 'express';
 import config from './app/config';
-const app = express();
+import app from './app';
 
 async function main() {
   try {
