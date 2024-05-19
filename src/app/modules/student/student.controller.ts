@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
 import { StudentService } from './student.service';
-import Joi from 'joi';
 import studentValidationSchema from './student.validation';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student } = req.body;
-    const { error } = studentValidationSchema.validate(student);
-    const result = await StudentService.createStudentIntoDB(student);
+    // const { error, value } = studentValidationSchema.validate(student);
+    const zodParsedData = studentValidationSchema.parse(student);
+    const result = await StudentService.createStudentIntoDB(zodParsedData);
 
-    if (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Bad Request',
-        error: error.details,
-      });
-    }
+    // if (error) {
+    //   res.status(500).json({
+    //     success: false,
+    //     message: 'Bad Request',
+    //     error: error.details,
+    //   });
+    // }
 
     res.status(200).json({
       success: true,
