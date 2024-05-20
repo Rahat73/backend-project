@@ -124,12 +124,21 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', 'blocked'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 studentSchema.statics.isStudentExists = async function (id: string) {
   const existingStudent = await Student.findOne({ id });
   return existingStudent;
 };
+// using instance method
+// studentSchema.methods.isStudentExists = async function (id: string) {
+//   const existingStudent = await Student.findOne({ id });
+//   return existingStudent;
+// };
 
 studentSchema.pre('save', async function (next) {
   const student = this;
@@ -140,9 +149,25 @@ studentSchema.pre('save', async function (next) {
   next();
 });
 
-// studentSchema.methods.isStudentExists = async function (id: string) {
-//   const existingStudent = await Student.findOne({ id });
-//   return existingStudent;
-// };
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre('findOne', function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
+
+// [ { $match: { isDeleted: { $ne: true } } ,{ '$match': { id: 'STU002' } } ]
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
