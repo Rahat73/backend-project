@@ -49,6 +49,7 @@ const localGuardianValidationSchema = z.object({
 
 const studentValidationSchema = z.object({
   id: z.string(),
+  password: z.string().max(20),
   name: userNameValidationSchema,
   gender: z.enum(['male', 'female'], {
     errorMap: (val) => ({ message: `Invalid gender` }),
