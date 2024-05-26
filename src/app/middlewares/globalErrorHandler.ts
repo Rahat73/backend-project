@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
 
 const golbalErrorHandler = (
   err: any,
@@ -6,7 +7,7 @@ const golbalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  let statusCode = 500;
+  let statusCode = httpStatus.INTERNAL_SERVER_ERROR;
   let message = err.message || 'Internal Server Error';
 
   return res.status(statusCode).json({
