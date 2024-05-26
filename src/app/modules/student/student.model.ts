@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
 import {
   StudentModel,
   TGuardian,
@@ -84,10 +83,11 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 const studentSchema = new Schema<TStudent, StudentModel>(
   {
     id: { type: String, required: true, unique: true },
-    password: {
-      type: String,
+    user: {
+      type: Schema.Types.ObjectId,
       required: true,
-      maxlength: [20, 'Password must be under 20 characters'],
+      unique: true,
+      ref: 'User',
     },
     name: { type: userNameSchema, required: true },
     gender: {
@@ -120,11 +120,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     guardian: { type: guardianSchema, required: true },
     localGuardian: { type: localGuardianSchema, required: true },
     profileImg: { type: String },
-    isActive: {
-      type: String,
-      enum: ['active', 'blocked'],
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -150,20 +145,6 @@ studentSchema.statics.isStudentExists = async function (id: string) {
 //   const existingStudent = await Student.findOne({ id });
 //   return existingStudent;
 // };
-
-studentSchema.pre('save', async function (next) {
-  const student = this;
-  student.password = await bcrypt.hash(
-    student.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
 
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
