@@ -47,30 +47,35 @@ const localGuardianValidationSchema = z.object({
   address: z.string().max(100, 'Address should be less than 100 characters'),
 });
 
-const studentValidationSchema = z.object({
-  id: z.string(),
-  name: userNameValidationSchema,
-  gender: z.enum(['male', 'female'], {
-    errorMap: (val) => ({ message: `Invalid gender` }),
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().min(6, 'Password should be at least 6 characters'),
+    student: z.object({
+      name: userNameValidationSchema,
+      gender: z.enum(['male', 'female'], {
+        errorMap: (val) => ({ message: `Invalid gender` }),
+      }),
+      dateOfBirth: z.date().optional(),
+      email: z.string().email({ message: 'Invalid email address' }),
+      contactNo: z.string(),
+      emergencyContactNo: z.string(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      permanentAddress: z
+        .string()
+        .max(100, 'Permanent Address should be less than 100 characters'),
+      presentAddress: z
+        .string()
+        .max(100, 'Present Address should be less than 100 characters'),
+      course: z.string(),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      profileImg: z.string().optional(),
+    }),
   }),
-  dateOfBirth: z.string().optional(),
-  email: z.string().email({ message: 'Invalid email address' }),
-  contactNo: z.string(),
-  emergencyContactNo: z.string(),
-  bloodGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-    .optional(),
-  permanentAddress: z
-    .string()
-    .max(100, 'Permanent Address should be less than 100 characters'),
-  presentAddress: z
-    .string()
-    .max(100, 'Present Address should be less than 100 characters'),
-  course: z.string(),
-  guardian: guardianValidationSchema,
-  localGuardian: localGuardianValidationSchema,
-  profileImg: z.string().optional(),
-  isDeleted: z.boolean().optional().default(false),
 });
 
-export default studentValidationSchema;
+export const studentValidations = {
+  createStudentValidationSchema,
+};
