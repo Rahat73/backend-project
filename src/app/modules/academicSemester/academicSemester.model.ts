@@ -28,13 +28,29 @@ const academicSemesterSchema = new Schema<TAcademicSemester>(
 );
 
 academicSemesterSchema.pre('save', async function (next) {
-  const isYearExist = await AcademicSemester.findOne({
+  const isSemesterExist = await AcademicSemester.findOne({
     year: this.year,
     name: this.name,
   });
-  if (isYearExist) {
+  if (isSemesterExist) {
     throw new Error('Academic Semester already exist for this year');
   }
+  next();
+});
+
+academicSemesterSchema.pre('updateOne', async function (next) {
+  const update = this.getUpdate() as Partial<TAcademicSemester>;
+
+  if (update.year && update.name && update.code) {
+    const isSemesterExist = await AcademicSemester.findOne({
+      year: update.year,
+      name: update.name,
+    });
+    if (isSemesterExist) {
+      throw new Error('Academic Semester already exist for this year');
+    }
+  }
+
   next();
 });
 
