@@ -120,9 +120,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     guardian: { type: guardianSchema, required: true },
     localGuardian: { type: localGuardianSchema, required: true },
     profileImg: { type: String },
-    isDeleted: {
-      type: Boolean,
-      default: false,
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester',
+      required: true,
     },
   },
   {
@@ -163,3 +164,7 @@ studentSchema.pre('aggregate', function (next) {
 });
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
+
+// Student.init().then(() => {
+//   console.log('Indexes created');
+// });

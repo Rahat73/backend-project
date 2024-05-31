@@ -20,9 +20,10 @@ const updateAcademicSemesterIntoDB = async (
   semesterId: string,
   updateInfo: Partial<TAcademicSemester>,
 ) => {
-  const result = await AcademicSemester.updateOne(
+  const result = await AcademicSemester.findOneAndUpdate(
     { _id: semesterId },
     updateInfo,
+    { new: true },
   );
   return result;
 };
