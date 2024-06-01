@@ -1,3 +1,4 @@
+import { startSession } from 'mongoose';
 import config from '../../config';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -6,6 +7,8 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateStudentId } from './user.utils';
+import AppError from '../../errors/appError';
+import httpStatus from 'http-status';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   const userdata: Partial<TUser> = {};
@@ -22,16 +25,39 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
     throw new Error('Admission semester not found');
   }
 
-  userdata.id = await generateStudentId(admissionSemester as TAcademicSemester);
+  const session = await startSession();
 
-  const newUser = await User.create(userdata);
+  try {
+    session.startTransaction();
 
-  if (Object.keys(newUser).length) {
-    studentData.id = newUser.id;
-    studentData.user = newUser._id;
+    userdata.id = await generateStudentId(
+      admissionSemester as TAcademicSemester,
+    );
 
-    const newStudent = await Student.create(studentData);
-    return newStudent;
+    const newUser = await User.create([userdata], { session });
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'User creation failed');
+    }
+
+    if (newUser.length) {
+      studentData.id = newUser[0].id;
+      studentData.user = newUser[0]._id;
+
+      const newStudent = await Student.create([studentData], { session });
+
+      if (!newStudent.length) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Student creation failed');
+      }
+
+      await session.commitTransaction();
+      await session.endSession();
+      return newStudent[0];
+    }
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, (error as Error)?.message);
   }
 };
 
