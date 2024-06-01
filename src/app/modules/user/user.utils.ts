@@ -7,13 +7,19 @@ export const findLastStudent = async () => {
       createdAt: -1,
     })
     .lean();
-  return lastStudent ? lastStudent.id.substring(6) : undefined;
+  return lastStudent ? lastStudent.id : undefined;
 };
 
 export const generateStudentId = async (payload: TAcademicSemester) => {
-  const currentId = (await findLastStudent()) || '0';
+  const lastStudentId = await findLastStudent();
 
-  const incrementId = (parseInt(currentId) + 1).toString().padStart(4, '0');
+  const lastStudentYear = lastStudentId?.substring(0, 4);
+  const lastStudentCode = lastStudentId?.substring(4, 6);
+  let incrementId = lastStudentId?.substring(6) || '0001';
+
+  if (lastStudentYear === payload.year && lastStudentCode === payload.code) {
+    incrementId = (parseInt(incrementId) + 1).toString().padStart(4, '0');
+  } else incrementId = '0001';
 
   const studentId = `${payload.year}${payload.code}${incrementId}`;
 
