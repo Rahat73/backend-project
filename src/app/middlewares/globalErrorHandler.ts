@@ -7,7 +7,7 @@ const golbalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  let statusCode = httpStatus.INTERNAL_SERVER_ERROR;
+  let statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
   let message = err.message || 'Internal Server Error';
 
   return res.status(statusCode).json({

@@ -125,6 +125,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       ref: 'AcademicSemester',
       required: true,
     },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+    },
   },
   {
     toJSON: {
