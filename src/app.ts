@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
-import { StudentRouter } from './app/modules/student/student.route';
-import { UserRouter } from './app/modules/user/user.route';
+import { StudentRoute } from './app/modules/student/student.route';
+import { UserRoute } from './app/modules/user/user.route';
 import golbalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFoundHandler from './app/middlewares/notFoundHandler';
 import router from './app/routes';

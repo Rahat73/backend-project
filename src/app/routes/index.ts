@@ -1,22 +1,27 @@
 import { Router } from 'express';
-import { UserRouter } from '../modules/user/user.route';
-import { StudentRouter } from '../modules/student/student.route';
-import { AcademicSemesterRouter } from '../modules/academicSemester/academicSemester.route';
+import { UserRoute } from '../modules/user/user.route';
+import { StudentRoute } from '../modules/student/student.route';
+import { AcademicSemesterRoute } from '../modules/academicSemester/academicSemester.route';
+import { AcademicFacultyRoute } from '../modules/academicFaculty/academicFaculty.route';
 
 const router = Router();
 
 const moduleRoutes = [
   {
     path: '/users',
-    route: UserRouter,
+    route: UserRoute,
   },
   {
     path: '/students',
-    route: StudentRouter,
+    route: StudentRoute,
   },
   {
     path: '/academic-semester',
-    route: AcademicSemesterRouter,
+    route: AcademicSemesterRoute,
+  },
+  {
+    path: '/academic-faculty',
+    route: AcademicFacultyRoute,
   },
 ];
 
