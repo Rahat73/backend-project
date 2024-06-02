@@ -28,6 +28,46 @@ const getStudentByIdFromDB = async (id: string) => {
   return result;
 };
 
+const updateStudentIntoDB = async (
+  id: string,
+  updateInfo: Partial<TStudent>,
+) => {
+  const studentExists = await Student.isStudentExists(id);
+  if (!studentExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+  }
+
+  //remainingInfo is the object that contains the fields that are not in the name,guaridan,localGuardian object
+  const { name, guardian, localGuardian, ...remainingInfo } = updateInfo;
+
+  const modifiedUpdatedInfo: Record<string, unknown> = { ...remainingInfo };
+
+  // checking if data inside name exists, if so then update it like name.lastName = value
+  //cz updating using the name field will replace the whole name object
+  if (name && Object.keys(name).length) {
+    // using loop cz name can have multiple fields [[firstName: value], [lastName: value]]
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedInfo[`name.${key}`] = value;
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedInfo[`guardian.${key}`] = value;
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedInfo[`localGuardian.${key}`] = value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, modifiedUpdatedInfo, {
+    new: true,
+    revalidate: true,
+  });
+  return result;
+};
+
 const deleteStudentFromDB = async (id: string) => {
   const studentExists = await Student.isStudentExists(id);
   if (!studentExists) {
@@ -72,5 +112,6 @@ const deleteStudentFromDB = async (id: string) => {
 export const StudentService = {
   getAllStudentsFromDB,
   getStudentByIdFromDB,
+  updateStudentIntoDB,
   deleteStudentFromDB,
 };

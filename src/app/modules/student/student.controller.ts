@@ -1,9 +1,7 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { StudentService } from './student.service';
-import studentValidationSchema from './student.validation';
-import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { StudentService } from './student.service';
 
 const getAllStudents = catchAsync(async (req, res) => {
   const result = await StudentService.getAllStudentsFromDB();
@@ -28,6 +26,19 @@ const getStudentById = catchAsync(async (req, res) => {
   });
 });
 
+const updateStudent = catchAsync(async (req, res) => {
+  const { studentId } = req.params;
+  const { student } = req.body;
+  const result = await StudentService.updateStudentIntoDB(studentId, student);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student updated successfully',
+    data: result,
+  });
+});
+
 const deleteStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentService.deleteStudentFromDB(studentId);
@@ -43,5 +54,6 @@ const deleteStudent = catchAsync(async (req, res) => {
 export const StudentController = {
   getAllStudents,
   getStudentById,
+  updateStudent,
   deleteStudent,
 };
