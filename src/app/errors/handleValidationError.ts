@@ -1,10 +1,12 @@
 import httpStatus from 'http-status';
 import { Error } from 'mongoose';
 import { ZodIssue } from 'zod';
-import { TErrorSources } from '../interface/error';
+import { TErrorSources, TGenericErrorResponse } from '../interface/error';
 
-const handleValidationError = (err: Error.ValidationError) => {
-  const errorSouces: TErrorSources = Object.values(err.errors).map(
+const handleValidationError = (
+  err: Error.ValidationError,
+): TGenericErrorResponse => {
+  const errorSources: TErrorSources = Object.values(err.errors).map(
     (error: Error.ValidatorError | Error.CastError) => {
       return {
         path: error?.path,
@@ -16,7 +18,7 @@ const handleValidationError = (err: Error.ValidationError) => {
   return {
     statusCode: httpStatus.BAD_REQUEST,
     message: 'Validation Error',
-    errorSouces,
+    errorSources: errorSources,
   };
 };
 
