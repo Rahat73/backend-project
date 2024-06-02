@@ -12,9 +12,10 @@ app.use(cors());
 
 app.use('/api/v1', router);
 
-app.get('/test', (req: Request, res: Response) => {
-  const test = 'Hello World!';
-  res.send(test);
+app.get('/test', async (req: Request, res: Response) => {
+  Promise.reject();
+  // const test = 'Hello World!';
+  // res.send(test);
 });
 
 app.use(golbalErrorHandler);

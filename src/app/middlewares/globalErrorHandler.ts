@@ -8,10 +8,11 @@ import handleZodError from '../errors/handleZodError';
 import { TErrorSources } from '../interface/error';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
+import AppError from '../errors/appError';
 
 const golbalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  let statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
-  let message = err.message || 'Internal Server Error';
+  let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
+  let message: string = 'Internal Server Error';
   let errorSources: TErrorSources = [
     {
       path: '',
@@ -39,6 +40,23 @@ const golbalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = formattedError?.statusCode;
     message = formattedError?.message;
     errorSources = formattedError?.errorSources;
+  } else if (err instanceof AppError) {
+    statusCode = err?.statusCode;
+    message = err?.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  } else if (err instanceof Error) {
+    message = err?.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
 
   return res.status(statusCode).json({
@@ -46,7 +64,6 @@ const golbalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message,
     errorSources,
     stack: config.NODE_ENV === 'development' ? err.stack : null,
-    err,
   });
 };
 
