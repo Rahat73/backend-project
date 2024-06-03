@@ -5,8 +5,23 @@ import AppError from '../../errors/appError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 
-const getAllStudentsFromDB = async () => {
-  const result = await Student.find()
+const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+  console.log(query);
+  const { searchParams } = query;
+  const studentSearchableFields = [
+    'name.firstName',
+    'name.middleName',
+    'name.lastName',
+    'email',
+  ];
+
+  // {$name :{$regex: query.name, $options: 'i'}}
+
+  const result = await Student.find({
+    $or: studentSearchableFields.map((field) => ({
+      [field]: { $regex: searchParams, $options: 'i' },
+    })),
+  })
     .populate('user')
     .populate('admissionSemester')
     .populate({
