@@ -6,28 +6,43 @@ import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  console.log(query);
-  const { searchParams } = query;
+  const queryObj = { ...query };
+  const searchParams = query?.searchParams || '';
   const studentSearchableFields = [
     'name.firstName',
     'name.middleName',
     'name.lastName',
     'email',
   ];
+  const excludeFields = ['searchParams', 'sort', 'limit'];
 
-  // {$name :{$regex: query.name, $options: 'i'}}
+  excludeFields.forEach((field) => delete queryObj[field]);
+  console.log(query, queryObj);
 
-  const result = await Student.find({
+  const searchQuery = Student.find({
     $or: studentSearchableFields.map((field) => ({
+      // {$name :{$regex: query.name, $options: 'i'}}
       [field]: { $regex: searchParams, $options: 'i' },
     })),
-  })
+  });
+
+  const filterQuery = searchQuery
+    .find(queryObj)
     .populate('user')
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
       populate: { path: 'academicFaculty' },
     });
+
+  const sort = (query?.sort as string) || '-createdAt';
+
+  const sortQuery = filterQuery.sort(sort);
+
+  const limit = (query?.limit as number) || 10;
+
+  const result = await sortQuery.limit(limit);
+
   return result;
 };
 
