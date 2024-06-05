@@ -4,55 +4,27 @@ import { Student } from './student.model';
 import AppError from '../../errors/appError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { studentSearchableFields } from './student.constant';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  const queryObj = { ...query };
-  const searchParams = query?.searchParams || '';
-  const studentSearchableFields = [
-    'name.firstName',
-    'name.middleName',
-    'name.lastName',
-    'email',
-  ];
-  const excludeFields = ['searchParams', 'sort', 'limit', 'page', 'fields'];
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: { path: 'academicFaculty' },
+      }),
+    query,
+  )
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  excludeFields.forEach((field) => delete queryObj[field]);
-  console.log(query, queryObj);
-
-  //partial match searching [query -> email=john@gma]
-  const searchQuery = Student.find({
-    $or: studentSearchableFields.map((field) => ({
-      // {$name :{$regex: query.name, $options: 'i'}}
-      [field]: { $regex: searchParams, $options: 'i' },
-    })),
-  });
-
-  //exact field value matching [query -> email=john@gmail.com]
-  const filterQuery = searchQuery
-    .find(queryObj)
-    .populate('user')
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: { path: 'academicFaculty' },
-    });
-
-  const sort = (query?.sort as string) || '-createdAt';
-  //sorting [query -> sort=id]
-  const sortQuery = filterQuery.sort(sort);
-
-  //limiting [query -> limit=1]
-  const limit = (Number(query?.limit) as number) || 10;
-  const limitQuery = sortQuery.limit(limit);
-
-  //paginating [query -> page=1&limit=1]
-  const page = Number(query?.page) || 1;
-  const skip = (page - 1) * limit;
-  const paginateQuery = limitQuery.skip(skip);
-
-  //fileds limiting [query -> fields=name,email or fields=-name]
-  const fields = (query?.fields as string).split(',').join(' ') || '-__v';
-  const result = await paginateQuery.select(fields);
+  const result = await studentQuery.modelQuery;
 
   return result;
 };
