@@ -139,7 +139,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 );
 
 studentSchema.virtual('fullname').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
 
 studentSchema.statics.isStudentExists = async function (id: string) {

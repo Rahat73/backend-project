@@ -14,11 +14,12 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     'name.lastName',
     'email',
   ];
-  const excludeFields = ['searchParams', 'sort', 'limit'];
+  const excludeFields = ['searchParams', 'sort', 'limit', 'page', 'fields'];
 
   excludeFields.forEach((field) => delete queryObj[field]);
   console.log(query, queryObj);
 
+  //partial match searching [query -> email=john@gma]
   const searchQuery = Student.find({
     $or: studentSearchableFields.map((field) => ({
       // {$name :{$regex: query.name, $options: 'i'}}
@@ -26,6 +27,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     })),
   });
 
+  //exact field value matching [query -> email=john@gmail.com]
   const filterQuery = searchQuery
     .find(queryObj)
     .populate('user')
@@ -36,12 +38,21 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     });
 
   const sort = (query?.sort as string) || '-createdAt';
-
+  //sorting [query -> sort=id]
   const sortQuery = filterQuery.sort(sort);
 
-  const limit = (query?.limit as number) || 10;
+  //limiting [query -> limit=1]
+  const limit = (Number(query?.limit) as number) || 10;
+  const limitQuery = sortQuery.limit(limit);
 
-  const result = await sortQuery.limit(limit);
+  //paginating [query -> page=1&limit=1]
+  const page = Number(query?.page) || 1;
+  const skip = (page - 1) * limit;
+  const paginateQuery = limitQuery.skip(skip);
+
+  //fileds limiting [query -> fields=name,email or fields=-name]
+  const fields = (query?.fields as string).split(',').join(' ') || '-__v';
+  const result = await paginateQuery.select(fields);
 
   return result;
 };
