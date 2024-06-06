@@ -31,7 +31,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
 
 const getStudentByIdFromDB = async (id: string) => {
   // const result = await Student.aggregate([{ $match: { id } }]);
-  const result = await Student.findOne({ id })
+  const result = await Student.findById(id)
     .populate('user')
     .populate('admissionSemester')
     .populate({
@@ -74,7 +74,7 @@ const updateStudentIntoDB = async (
     }
   }
 
-  const result = await Student.findOneAndUpdate({ id }, modifiedUpdatedInfo, {
+  const result = await Student.findByIdAndUpdate(id, modifiedUpdatedInfo, {
     new: true,
     revalidate: true,
   });
@@ -82,17 +82,13 @@ const updateStudentIntoDB = async (
 };
 
 const deleteStudentFromDB = async (id: string) => {
-  const studentExists = await Student.isStudentExists(id);
-  if (!studentExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
-  }
   const session = await startSession();
 
   try {
     session.startTransaction();
 
-    const deletedStudent = await Student.findOneAndUpdate(
-      { id },
+    const deletedStudent = await Student.findByIdAndUpdate(
+      id,
       { isDeleted: true },
       { new: true, session },
     );
@@ -101,8 +97,11 @@ const deleteStudentFromDB = async (id: string) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student');
     }
 
-    const deletedUser = await User.findOneAndUpdate(
-      { id },
+    // get user _id from deletedStudent
+    const userId = deletedStudent.user;
+
+    const deletedUser = await User.findByIdAndUpdate(
+      userId,
       { isDeleted: true },
       { new: true, session },
     );
@@ -115,10 +114,10 @@ const deleteStudentFromDB = async (id: string) => {
     await session.endSession();
 
     return deletedStudent;
-  } catch (error) {
+  } catch (err) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student');
+    throw new Error('Failed to delete student');
   }
 };
 
