@@ -122,7 +122,7 @@ const deleteStudentFromDB = async (id: string) => {
   }
 };
 
-export const StudentService = {
+export const StudentServices = {
   getAllStudentsFromDB,
   getStudentByIdFromDB,
   updateStudentIntoDB,

@@ -1,7 +1,7 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { semesterNameToCodeMapper } from './academicSemester.constant';
-import { AcademicSemesterService } from './academicSemester.service';
+import { AcademicSemesterServices } from './academicSemester.service';
 
 const createAcademicSemester = catchAsync(async (req, res) => {
   const academicSemester = req.body;
@@ -13,7 +13,7 @@ const createAcademicSemester = catchAsync(async (req, res) => {
   }
 
   const result =
-    await AcademicSemesterService.createAcademicSemesterIntoDB(
+    await AcademicSemesterServices.createAcademicSemesterIntoDB(
       academicSemester,
     );
 
@@ -26,7 +26,7 @@ const createAcademicSemester = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicSemesters = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterService.getAllAcademicSemestersFromDB();
+  const result = await AcademicSemesterServices.getAllAcademicSemestersFromDB();
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -39,7 +39,7 @@ const getAcademicSemestersById = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
 
   const result =
-    await AcademicSemesterService.getAcademicSemestersByIdFromDB(semesterId);
+    await AcademicSemesterServices.getAcademicSemestersByIdFromDB(semesterId);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -62,7 +62,7 @@ const updateAcademicSemester = catchAsync(async (req, res) => {
     }
   }
 
-  const result = await AcademicSemesterService.updateAcademicSemesterIntoDB(
+  const result = await AcademicSemesterServices.updateAcademicSemesterIntoDB(
     semesterId,
     updateInfo,
   );
@@ -74,7 +74,7 @@ const updateAcademicSemester = catchAsync(async (req, res) => {
   });
 });
 
-export const AcademicSemesterController = {
+export const AcademicSemesterControllers = {
   createAcademicSemester,
   getAllAcademicSemesters,
   getAcademicSemestersById,

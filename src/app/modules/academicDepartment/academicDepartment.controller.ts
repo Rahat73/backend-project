@@ -1,11 +1,11 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { AcademicDepartmentService } from './academicDepartment.service';
+import { AcademicDepartmentServices } from './academicDepartment.service';
 
 const createAcademicDepartment = catchAsync(async (req, res) => {
   const academicDepartment = req.body;
   const result =
-    await AcademicDepartmentService.createAcademicDepartmentIntoDB(
+    await AcademicDepartmentServices.createAcademicDepartmentIntoDB(
       academicDepartment,
     );
   sendResponse(res, {
@@ -18,7 +18,7 @@ const createAcademicDepartment = catchAsync(async (req, res) => {
 
 const getAllAcademicDepartments = catchAsync(async (req, res) => {
   const result =
-    await AcademicDepartmentService.getAllAcademicDepartmentsFromDB();
+    await AcademicDepartmentServices.getAllAcademicDepartmentsFromDB();
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -30,7 +30,7 @@ const getAllAcademicDepartments = catchAsync(async (req, res) => {
 const getAcademicDepartmentById = catchAsync(async (req, res) => {
   const { departmentId } = req.params;
   const result =
-    await AcademicDepartmentService.getAcademicDepartmentByIdFromDB(
+    await AcademicDepartmentServices.getAcademicDepartmentByIdFromDB(
       departmentId,
     );
   sendResponse(res, {
@@ -44,10 +44,11 @@ const getAcademicDepartmentById = catchAsync(async (req, res) => {
 const updateAcademicDepartment = catchAsync(async (req, res) => {
   const { departmentId } = req.params;
   const updateInfo = req.body;
-  const result = await AcademicDepartmentService.updateAcademicDepartmentIntoDB(
-    departmentId,
-    updateInfo,
-  );
+  const result =
+    await AcademicDepartmentServices.updateAcademicDepartmentIntoDB(
+      departmentId,
+      updateInfo,
+    );
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -56,7 +57,7 @@ const updateAcademicDepartment = catchAsync(async (req, res) => {
   });
 });
 
-export const AcademicDepartmentController = {
+export const AcademicDepartmentControllers = {
   createAcademicDepartment,
   getAllAcademicDepartments,
   getAcademicDepartmentById,

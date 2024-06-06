@@ -1,11 +1,11 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { AcademicFacultyService } from './academicFaculty.service';
+import { AcademicFacultyServices } from './academicFaculty.service';
 
 const createAcademicFaculty = catchAsync(async (req, res) => {
   const academicFaculty = req.body;
   const result =
-    await AcademicFacultyService.createAcademicFacultyIntoDB(academicFaculty);
+    await AcademicFacultyServices.createAcademicFacultyIntoDB(academicFaculty);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -15,7 +15,7 @@ const createAcademicFaculty = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicFaculties = catchAsync(async (req, res) => {
-  const result = await AcademicFacultyService.getAllAcademicFacultiesFromDB();
+  const result = await AcademicFacultyServices.getAllAcademicFacultiesFromDB();
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -27,7 +27,7 @@ const getAllAcademicFaculties = catchAsync(async (req, res) => {
 const getAcademicFacultyById = catchAsync(async (req, res) => {
   const { facultyId } = req.params;
   const result =
-    await AcademicFacultyService.getAcademicFacultyByIdFromDB(facultyId);
+    await AcademicFacultyServices.getAcademicFacultyByIdFromDB(facultyId);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -39,7 +39,7 @@ const getAcademicFacultyById = catchAsync(async (req, res) => {
 const updateAcademicFaculty = catchAsync(async (req, res) => {
   const { facultyId } = req.params;
   const updateInfo = req.body;
-  const result = await AcademicFacultyService.updateAcademicFacultyIntoDB(
+  const result = await AcademicFacultyServices.updateAcademicFacultyIntoDB(
     facultyId,
     updateInfo,
   );
@@ -51,7 +51,7 @@ const updateAcademicFaculty = catchAsync(async (req, res) => {
   });
 });
 
-export const AcademicFacultyController = {
+export const AcademicFacultyControllers = {
   createAcademicFaculty,
   getAllAcademicFaculties,
   getAcademicFacultyById,

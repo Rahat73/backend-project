@@ -61,6 +61,6 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   }
 };
 
-export const UserService = {
+export const UserServices = {
   createStudentIntoDB,
 };
