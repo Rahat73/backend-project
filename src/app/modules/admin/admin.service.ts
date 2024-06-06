@@ -20,7 +20,7 @@ const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-const getSingleAdminFromDB = async (id: string) => {
+const getAdminByIdFromDB = async (id: string) => {
   const result = await Admin.findById(id);
   return result;
 };
@@ -87,7 +87,7 @@ const deleteAdminFromDB = async (id: string) => {
 
 export const AdminServices = {
   getAllAdminsFromDB,
-  getSingleAdminFromDB,
+  getAdminByIdFromDB,
   updateAdminIntoDB,
   deleteAdminFromDB,
 };

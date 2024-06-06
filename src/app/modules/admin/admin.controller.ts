@@ -3,18 +3,6 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AdminServices } from './admin.service';
 
-const getSingleAdmin = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await AdminServices.getSingleAdminFromDB(id);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Admin is retrieved succesfully',
-    data: result,
-  });
-});
-
 const getAllAdmins = catchAsync(async (req, res) => {
   const result = await AdminServices.getAllAdminsFromDB(req.query);
 
@@ -22,6 +10,18 @@ const getAllAdmins = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Admins are retrieved succesfully',
+    data: result,
+  });
+});
+
+const getAdminById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await AdminServices.getAdminByIdFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin is retrieved succesfully',
     data: result,
   });
 });
@@ -53,7 +53,7 @@ const deleteAdmin = catchAsync(async (req, res) => {
 
 export const AdminControllers = {
   getAllAdmins,
-  getSingleAdmin,
+  getAdminById,
   deleteAdmin,
   updateAdmin,
 };
