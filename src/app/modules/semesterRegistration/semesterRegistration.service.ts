@@ -6,7 +6,7 @@ const getSemesterRegistrationByIdFromDB = () => {};
 
 const updateSemesterRegistrationByIdFromDB = () => {};
 
-export const SemesterRegestrationServices = {
+export const SemesterRegistrationServices = {
   createSemesterRegistrationIntoDB,
   getAllSemesterRegistrationsFromDB,
   getSemesterRegistrationByIdFromDB,

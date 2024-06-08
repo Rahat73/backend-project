@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { SemesterRegistrationControllers } from './semesterRegestration.controller';
+import { SemesterRegistrationControllers } from './semesterRegistration.controller';
 import validationHandler from '../../middlewares/validationHandler';
-import { SemesterRegestrationValidations } from './semesterRegestration.validation';
+import { SemesterRegistrationValidations } from './semesterRegistration.validation';
 
 const router = Router();
 
 router.post(
   '/create-semester-registration',
   validationHandler(
-    SemesterRegestrationValidations.createSemesterRegestrationValidationSchema,
+    SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
   ),
   SemesterRegistrationControllers.createSemesterRegistration,
 );
@@ -19,6 +19,9 @@ router.get('/:id', SemesterRegistrationControllers.getSemesterRegistrationById);
 
 router.patch(
   '/:id',
+  validationHandler(
+    SemesterRegistrationValidations.upadateSemesterRegistrationValidationSchema,
+  ),
   SemesterRegistrationControllers.updateSemesterRegistration,
 );
 

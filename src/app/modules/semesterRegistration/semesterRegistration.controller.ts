@@ -1,11 +1,11 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { SemesterRegestrationServices } from './semesterRegestration.service';
+import { SemesterRegistrationServices } from './semesterRegistration.service';
 
 const createSemesterRegistration = catchAsync(async (req, res, next) => {
   const result =
-    await SemesterRegestrationServices.createSemesterRegistrationIntoDB();
+    await SemesterRegistrationServices.createSemesterRegistrationIntoDB();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -17,7 +17,7 @@ const createSemesterRegistration = catchAsync(async (req, res, next) => {
 
 const getAllSemesterRegistrations = catchAsync(async (req, res, next) => {
   const result =
-    await SemesterRegestrationServices.getAllSemesterRegistrationsFromDB();
+    await SemesterRegistrationServices.getAllSemesterRegistrationsFromDB();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -30,7 +30,7 @@ const getAllSemesterRegistrations = catchAsync(async (req, res, next) => {
 const getSemesterRegistrationById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const result =
-    await SemesterRegestrationServices.getSemesterRegistrationByIdFromDB();
+    await SemesterRegistrationServices.getSemesterRegistrationByIdFromDB();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -43,7 +43,7 @@ const updateSemesterRegistration = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { semesterRegistration } = req.body;
   const result =
-    await SemesterRegestrationServices.updateSemesterRegistrationByIdFromDB();
+    await SemesterRegistrationServices.updateSemesterRegistrationByIdFromDB();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
