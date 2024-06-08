@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TSemesterRegistration } from './semesterRegistration.interface';
+import { semesterRegistrationStatus } from './semesterRegistration.constant';
 
 const semesterRegistrationSchema = new Schema<TSemesterRegistration>(
   {

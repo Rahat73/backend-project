@@ -5,12 +5,14 @@ import { SemesterRegistrationServices } from './semesterRegistration.service';
 
 const createSemesterRegistration = catchAsync(async (req, res, next) => {
   const result =
-    await SemesterRegistrationServices.createSemesterRegistrationIntoDB();
+    await SemesterRegistrationServices.createSemesterRegistrationIntoDB(
+      req.body,
+    );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is deleted succesfully',
+    message: 'Semester registration is created succesfully',
     data: result,
   });
 });
@@ -22,7 +24,7 @@ const getAllSemesterRegistrations = catchAsync(async (req, res, next) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is deleted succesfully',
+    message: 'Semester registrations are fetched succesfully',
     data: result,
   });
 });
@@ -34,7 +36,7 @@ const getSemesterRegistrationById = catchAsync(async (req, res, next) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is deleted succesfully',
+    message: 'Semester registration is fetched succesfully',
     data: result,
   });
 });
@@ -47,7 +49,7 @@ const updateSemesterRegistration = catchAsync(async (req, res, next) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is deleted succesfully',
+    message: 'Semester registration is updated succesfully',
     data: result,
   });
 });
