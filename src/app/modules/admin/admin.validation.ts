@@ -7,7 +7,7 @@ const createUserNameValidationSchema = z.object({
   lastName: z.string().max(20),
 });
 
-export const createAdminValidationSchema = z.object({
+const createAdminValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20),
     admin: z.object({
