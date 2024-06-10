@@ -5,6 +5,8 @@ import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { registrationStatus } from './semesterRegistration.constant';
+import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
+import { startSession } from 'mongoose';
 
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,
@@ -135,9 +137,50 @@ const updateSemesterRegistrationByIdFromDB = async (
   return result;
 };
 
+const deleteSemesterRegistrationFromDB = async (id: string) => {
+  const session = await startSession();
+
+  //check if semester is registered
+  const isSemesterRegistered = await SemesterRegistration.findById(id);
+  if (!isSemesterRegistered) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'This semester is not registered!',
+    );
+  }
+
+  //check if semester is upcoming
+  if (isSemesterRegistered.status !== registrationStatus.UPCOMING) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `You can not delete a semester that is not upcoming!`,
+    );
+  }
+
+  try {
+    session.startTransaction();
+    await OfferedCourse.deleteMany({
+      semesterRegistration: id,
+    });
+
+    const result = await SemesterRegistration.findByIdAndDelete(id);
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return result;
+  } catch (error: any) {
+    session.abortTransaction();
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
+};
+
 export const SemesterRegistrationServices = {
   createSemesterRegistrationIntoDB,
   getAllSemesterRegistrationsFromDB,
   getSemesterRegistrationByIdFromDB,
   updateSemesterRegistrationByIdFromDB,
+  deleteSemesterRegistrationFromDB,
 };

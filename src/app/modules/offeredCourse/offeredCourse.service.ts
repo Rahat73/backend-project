@@ -9,6 +9,7 @@ import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 import { hasTimeConflict } from './offeredCourse.utility';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { registrationStatus } from '../semesterRegistration/semesterRegistration.constant';
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -180,7 +181,7 @@ const updateOfferedCourseIntoDB = async (
   const semesterRegistrationStatus =
     await SemesterRegistration.findById(semesterRegistration);
 
-  if (semesterRegistrationStatus?.status !== 'UPCOMING') {
+  if (semesterRegistrationStatus?.status !== registrationStatus.UPCOMING) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `You can not update this offered course as it is ${semesterRegistrationStatus?.status}`,
@@ -231,7 +232,7 @@ const deleteOfferedCourseFromDB = async (id: string) => {
   const semesterRegistrationStatus =
     await SemesterRegistration.findById(semesterRegistation).select('status');
 
-  if (semesterRegistrationStatus?.status !== 'UPCOMING') {
+  if (semesterRegistrationStatus?.status !== registrationStatus.UPCOMING) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `Offered course can not update ! because the semester ${semesterRegistrationStatus}`,
