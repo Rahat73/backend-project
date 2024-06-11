@@ -129,7 +129,6 @@ const updateSemesterRegistrationByIdFromDB = async (
     );
   }
 
-  console.log(payload);
   const result = await SemesterRegistration.findByIdAndUpdate(id, payload, {
     new: true,
     // revalidate: true,
