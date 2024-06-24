@@ -22,7 +22,7 @@ router.post(
 
 router.post(
   '/refresh-token',
-  // validationHandler(AuthValidation.refreshTokenValidationSchema),
+  validationHandler(AuthValidation.refreshTokenValidationSchema),
   AuthControllers.refreshToken,
 );
 
