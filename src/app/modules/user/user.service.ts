@@ -19,8 +19,13 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createStudentIntoDB = async (password: string, studentData: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  studentData: TStudent,
+) => {
   const userdata: Partial<TUser> = {};
 
   userdata.password = password || (config.default_password as string);
@@ -46,6 +51,11 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
       admissionSemester as TAcademicSemester,
     );
 
+    const imageName = `${userdata.id}-${studentData?.name?.firstName}`;
+    const path = file.path;
+
+    const profileImg = await sendImageToCloudinary(imageName, path);
+
     const newUser = await User.create([userdata], { session });
 
     if (!newUser.length) {
@@ -55,6 +65,7 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
     if (newUser.length) {
       studentData.id = newUser[0].id;
       studentData.user = newUser[0]._id;
+      studentData.profileImg = profileImg;
 
       const newStudent = await Student.create([studentData], { session });
 

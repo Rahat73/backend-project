@@ -5,7 +5,11 @@ import { UserServices } from './user.service';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student } = req.body;
-  const result = await UserServices.createStudentIntoDB(password, student);
+  const result = await UserServices.createStudentIntoDB(
+    req.file,
+    password,
+    student,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

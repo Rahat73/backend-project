@@ -49,11 +49,11 @@ const localGuardianValidationSchema = z.object({
 
 const createStudentValidationSchema = z.object({
   body: z.object({
-    password: z.string().min(6, 'Password should be at least 6 characters'),
+    password: z.string().optional(),
     student: z.object({
       name: userNameValidationSchema,
       gender: z.enum(['male', 'female'], {
-        errorMap: (val) => ({ message: `Invalid gender` }),
+        errorMap: () => ({ message: `Invalid gender` }),
       }),
       dateOfBirth: z.string().optional(),
       email: z.string().email({ message: 'Invalid email address' }),
@@ -86,7 +86,7 @@ const updateStudentValidationSchema = z.object({
           name: userNameValidationSchema.partial().optional(),
           gender: z
             .enum(['male', 'female'], {
-              errorMap: (val) => ({ message: `Invalid gender` }),
+              errorMap: () => ({ message: `Invalid gender` }),
             })
             .optional(),
           dateOfBirth: z.string().optional(),
