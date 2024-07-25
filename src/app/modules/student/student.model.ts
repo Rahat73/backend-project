@@ -6,7 +6,6 @@ import {
   TStudent,
   TUserName,
 } from './student.interface';
-import config from '../../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -119,7 +118,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     course: { type: String, required: [true, 'Course is required'] },
     guardian: { type: guardianSchema, required: true },
     localGuardian: { type: localGuardianSchema, required: true },
-    profileImg: { type: String },
+    profileImg: { type: String, default: '' },
     isDeleted: { type: Boolean, default: false },
     admissionSemester: {
       type: Schema.Types.ObjectId,
@@ -129,6 +128,10 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     academicDepartment: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty',
     },
   },
   {

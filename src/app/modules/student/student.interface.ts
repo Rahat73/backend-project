@@ -38,10 +38,11 @@ export type TStudent = {
   course: string;
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
-  profileImg?: string;
+  profileImg: string;
   isDeleted: boolean;
   admissionSemester: Types.ObjectId;
   academicDepartment: Types.ObjectId;
+  academicFaculty: Types.ObjectId;
 };
 
 export interface StudentModel extends Model<TStudent> {
