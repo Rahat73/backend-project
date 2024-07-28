@@ -21,7 +21,7 @@ const createAdminValidationSchema = z.object({
       bloodGroup: z.enum([...bloodGroup] as [string, ...string[]]),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      profileImg: z.string(),
+      profileImg: z.string().optional(),
     }),
   }),
 });
