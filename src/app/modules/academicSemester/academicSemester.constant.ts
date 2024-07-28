@@ -1,3 +1,5 @@
+export const AcademicSemesterSearchableFields = ['name', 'year'];
+
 import {
   TMonth,
   TSemesterCode,

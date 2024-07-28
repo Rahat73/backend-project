@@ -15,6 +15,17 @@ router.post(
 );
 
 router.get(
+  '/',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  CourseControllers.getAllCourses,
+);
+
+router.get(
   '/:id',
   auth(
     USER_ROLE.superAdmin,
@@ -45,22 +56,22 @@ router.put(
   CourseControllers.assignFacultiesWithCourse,
 );
 
-router.delete(
-  '/:courseId/remove-faculties',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
-  validationHandler(CourseValidations.facultiesWithCourseValidationSchema),
-  CourseControllers.removeFacultiesFromCourse,
-);
-
 router.get(
-  '/',
+  '/:courseId/get-faculties',
   auth(
     USER_ROLE.superAdmin,
     USER_ROLE.admin,
     USER_ROLE.faculty,
     USER_ROLE.student,
   ),
-  CourseControllers.getAllCourses,
+  CourseControllers.getFacultiesWithCourse,
+);
+
+router.delete(
+  '/:courseId/remove-faculties',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  validationHandler(CourseValidations.facultiesWithCourseValidationSchema),
+  CourseControllers.removeFacultiesFromCourse,
 );
 
 export const CourseRoutes = router;
