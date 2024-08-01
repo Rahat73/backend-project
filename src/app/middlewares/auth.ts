@@ -17,7 +17,15 @@ export const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     // checking if the given token is valid
-    const decoded = verifyToken(token, config.jwt_access_secret as string);
+    let decoded;
+    try {
+      decoded = verifyToken(
+        token,
+        config.jwt_access_secret as string,
+      ) as JwtPayload;
+    } catch (error) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
+    }
 
     const { role, userId, iat } = decoded;
 
