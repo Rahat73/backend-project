@@ -92,7 +92,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     gender: {
       type: String,
       enum: {
-        values: ['male', 'female'],
+        values: ['male', 'female', 'other'],
         message: '{VALUE} is not valid gender',
       },
       required: true,

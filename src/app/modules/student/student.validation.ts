@@ -52,7 +52,7 @@ const createStudentValidationSchema = z.object({
     password: z.string().optional(),
     student: z.object({
       name: userNameValidationSchema,
-      gender: z.enum(['male', 'female'], {
+      gender: z.enum(['male', 'female', 'other'], {
         errorMap: () => ({ message: `Invalid gender` }),
       }),
       dateOfBirth: z.string().optional(),

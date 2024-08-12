@@ -5,6 +5,8 @@ import {
   semesterCode,
   semesterName,
 } from './academicSemester.constant';
+import AppError from '../../errors/appError';
+import httpStatus from 'http-status';
 
 const academicSemesterSchema = new Schema<TAcademicSemester>(
   {
@@ -33,7 +35,10 @@ academicSemesterSchema.pre('save', async function (next) {
     name: this.name,
   });
   if (isSemesterExist) {
-    throw new Error('Academic Semester already exist for this year');
+    throw new AppError(
+      httpStatus.CONFLICT,
+      'Academic Semester already exist for this year',
+    );
   }
   next();
 });
@@ -47,7 +52,10 @@ academicSemesterSchema.pre('updateOne', async function (next) {
       name: update.name,
     });
     if (isSemesterExist) {
-      throw new Error('Academic Semester already exist for this year');
+      throw new AppError(
+        httpStatus.CONFLICT,
+        'Academic Semester already exist for this year',
+      );
     }
   }
 
