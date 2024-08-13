@@ -17,6 +17,7 @@ export type TSemesterName = 'Autumn' | 'Summer' | 'Fall';
 export type TSemesterCode = '01' | '02' | '03';
 
 export type TAcademicSemester = {
+  _id: string;
   name: TSemesterName;
   code: TSemesterCode;
   year: string;

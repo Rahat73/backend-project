@@ -5,7 +5,6 @@ import config from '../../config';
 import AppError from '../../errors/appError';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
-import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
@@ -57,9 +56,7 @@ const createStudentIntoDB = async (
   try {
     session.startTransaction();
 
-    userdata.id = await generateStudentId(
-      admissionSemester as TAcademicSemester,
-    );
+    userdata.id = await generateStudentId(admissionSemester);
 
     if (file) {
       const imageName = `${userdata.id}-${studentData?.name?.firstName}`;
