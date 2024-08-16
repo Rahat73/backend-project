@@ -9,7 +9,7 @@ import { Admin } from './admin.model';
 import AppError from '../../errors/appError';
 
 const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
-  const adminQuery = new QueryBuilder(Admin.find(), query)
+  const adminQuery = new QueryBuilder(Admin.find().populate('user'), query)
     .search(adminSearchableFields)
     .filter()
     .sort()
