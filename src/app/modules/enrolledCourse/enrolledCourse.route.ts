@@ -31,4 +31,10 @@ router.patch(
   EnrolledCourseControllers.updateEnrolledCourseMarks,
 );
 
+router.get(
+  '/enrolled-courses-faculty',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  EnrolledCourseControllers.getEnrolledCourseByFaculty,
+);
+
 export const EnrolledCourseRoutes = router;
